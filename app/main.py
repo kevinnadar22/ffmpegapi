@@ -14,6 +14,7 @@ import shlex
 import subprocess
 from contextlib import asynccontextmanager
 from typing import Dict, Tuple, Union
+from typing_extensions import Annotated
 
 from fastapi import Depends, FastAPI, Form, Request
 from fastapi.responses import RedirectResponse
@@ -51,8 +52,8 @@ async def read_root():
 @app.post("/run", response_model=CommandResult)
 async def ffmpeg_run(
     request: Request,
-    _: bool = Depends(allow_command),
-    cmd: str = Depends(preprocess_cmd),
+    _: Annotated[bool, Depends(allow_command)],
+    cmd: Annotated[str, Depends(preprocess_cmd)],
     return_file: bool = Form(
         False, description="If true, returns the output file itself."
     ),

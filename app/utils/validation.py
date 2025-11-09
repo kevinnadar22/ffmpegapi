@@ -12,12 +12,15 @@ __version__ = "0.1.0"
 
 
 import subprocess
+
+from fastapi import Form
 from app.config import settings
 from app.exceptions import (
     FFmpegNotInstalledException,
     InvalidFFmpegCommandException,
     ProhibitedOperationException,
 )
+from typing_extensions import Annotated
 
 
 def check_if_ffmpeg_installed() -> bool:
@@ -62,7 +65,7 @@ def input_file_size_within_limit(file_size: int | None) -> bool:
     return 0 < file_size <= settings.max_upload_size_mb
 
 
-def allow_command(cmd: str) -> bool:
+def allow_command(cmd: Annotated[str, Form(...)]) -> bool:
     """Checks if the command is allowed to be executed."""
 
     if not check_if_ffmpeg_installed():
@@ -80,16 +83,3 @@ def allow_command(cmd: str) -> bool:
         )
 
     return True
-
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-File: validation.py
-Author: Maria Kevin
-Created: 2025-11-09
-Description: Brief description
-"""
-
-__author__ = "Maria Kevin"
-__version__ = "0.1.0"

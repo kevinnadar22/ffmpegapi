@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "ffmpegapi"
 version = "0.1.0"
@@ -12,3 +16,16 @@ dependencies = [
     "requests>=2.32.5",
     "uvicorn[standard]>=0.23.2",
 ]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pre-commit>=4.4.0",
+    "pytest>=9.0.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[tool.hatch.build.targets.wheel]
+packages = ["app/"]

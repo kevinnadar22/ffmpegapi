@@ -13,6 +13,7 @@ __version__ = "0.1.0"
 
 from pydantic import BaseModel
 
+
 class FFmpegCommand(BaseModel):
     cmd: str
 

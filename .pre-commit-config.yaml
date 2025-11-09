@@ -1,0 +1,28 @@
+repos:
+  # 1. Ruff: Linter + Import sorter + Fixer
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: [--fix]     # auto-fix lint and import issues
+      - id: ruff-format   # code formatter (Black-compatible)
+
+  # 2. Black: Optional – for canonical formatting if you prefer it over ruff-format
+  - repo: https://github.com/psf/black
+    rev: 24.3.0
+    hooks:
+      - id: black
+
+  # 3. MyPy: static type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.0
+    hooks:
+      - id: mypy
+
+  # 4. Basic hygiene checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace   # removes extra spaces at line ends
+      - id: end-of-file-fixer     # ensures file ends with a single newline
+      - id: check-yaml            # validates YAML syntax (prevents malformed configs)

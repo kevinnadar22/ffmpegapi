@@ -11,6 +11,7 @@ __author__ = "Maria Kevin"
 __version__ = "0.1.0"
 
 
+import os
 import shlex
 from typing_extensions import Annotated
 from fastapi import File, UploadFile, Form
@@ -22,7 +23,7 @@ from app.utils.validation import input_file_size_within_limit
 
 
 def preprocess_cmd(
-    input_path: Annotated[UploadFile, File()],
+    input_file: Annotated[UploadFile, File()],
     cmd: str = Form(...),
 ) -> str:
     """Saves the uploaded input file and replaces the input tag in the command.
@@ -40,14 +41,15 @@ def preprocess_cmd(
             detail="Command must contain exactly one input tag '-i'."
         )
 
-    if not input_file_size_within_limit(input_path.size):
+    if not input_file_size_within_limit(input_file.size):
         raise InvalidFFmpegCommandException(
-            detail=f"Input file size exceeds the maximum allowed limit of {settings.max_upload_size_mb} bytes."
+            status_code=413,
+            detail=f"Input file size exceeds the maximum allowed limit of {settings.max_upload_size_mb} bytes.",
         )
 
-    full_path = f"{create_temp_folder(settings.upload_dir)}/{input_path.filename}"
+    full_path = f"{create_temp_folder(settings.upload_dir)}/{input_file.filename}"
 
-    save_uploaded_file(input_path.file.read(), full_path)
+    save_uploaded_file(input_file.file.read(), full_path)
 
     new_cmd = replace_input_tag(cmd, full_path)
     new_cmd = replace_output_tag(new_cmd)
@@ -63,17 +65,30 @@ def replace_input_tag(cmd: str, full_path: str) -> str:
 
 
 def get_output_path_from_cmd(cmd: str, replace_parent_dir: bool = False) -> str:
-    """Extract the output file path safely from an ffmpeg command string."""
+    """Extract the output file path safely from an ffmpeg command string.
+
+    Handles quoted and unquoted filenames.
+    Example:
+        ffmpeg -i input.mp3 -c:v libx264 'output video.mp4' → output video.mp4
+        ffmpeg -i input.mp3 -c:v libx264 video.mp4         → video.mp4
+    """
     tokens = shlex.split(cmd)
     if not tokens:
         return ""
 
-    output_path = tokens[-1]  # last token is usually output
+    # Last token is assumed to be output path
+    output_path = tokens[-1].strip()
+
+    # Normalize quotes (in case shlex didn’t fully handle it)
+    output_path = output_path.strip("'").strip('"')
+
     if replace_parent_dir:
-        # remove first directory level
-        parts = output_path.split("/", 1)
+        # Normalize path separators, remove first directory level if present
+        output_path = os.path.normpath(output_path)
+        parts = output_path.split(os.sep, 1)
         if len(parts) == 2:
             output_path = parts[1]
+
     return output_path
 
 
@@ -86,5 +101,9 @@ def replace_output_tag(cmd: str) -> str:
     output_file_name_part = output_file_name_part.split("/")[-1]
 
     local_path = f"{create_temp_folder(settings.output_dir)}/{output_file_name_part}"
-    new_cmd = cmd.replace(output_file_name_part, local_path, 1)
+
+    if cmd.endswith("'"):
+        new_cmd = cmd.replace(output_file_name_part, f"{local_path}", 1)
+    else:
+        new_cmd = cmd.replace(output_file_name_part, f"'{local_path}'", 1)
     return new_cmd

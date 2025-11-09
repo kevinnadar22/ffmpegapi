@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     input_tag_placeholder: str = "<input>"
 
     allowed_commands: list[str] = ["ffmpeg", "ffprobe"]
-    max_upload_size_mb: int = 100  * 1024 * 1024  # 100 MB
+    max_upload_size_mb: int = 100 * 1024 * 1024  # 100 MB
 
 
 settings = Settings()
