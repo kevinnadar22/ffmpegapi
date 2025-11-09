@@ -195,4 +195,13 @@ For complete interactive API documentation, visit `http://localhost:8000/docs` w
 
 ---
 
+## Author
+
+**Kevin Nadar**
+
+🌐 Website: [mariakevin.in](https://mariakevin.in)
+💻 GitHub: [@kevinnadar22](https://github.com/kevinnadar22)
+
+---
+
 **No more FFmpeg installation headaches for your users. Just upload, process, and download.**
