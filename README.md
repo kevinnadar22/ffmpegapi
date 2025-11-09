@@ -38,7 +38,9 @@ with open("output.mp4", "wb") as f:
 print("File saved as output.mp4")
 ```
 
-**Response:** Binary file content that gets saved directly.### Example 2: Get JSON response with file URL
+**Response:** Binary file content that gets saved directly.
+
+### Example 2: Get JSON response with file URL
 
 Extract audio from a video and convert to MP3:
 
