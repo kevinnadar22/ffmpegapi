@@ -9,7 +9,9 @@ When building CLI tools that require FFmpeg, the biggest friction point is insta
 ## How It Works
 
 
-**Important:** You must include a media file in your request. Use `<input>` as the placeholder for the input file path in your FFmpeg command.
+**Requirements:**
+- [FFmpeg must be installed](#installing-ffmpeg) on the server running this API
+
 
 ## Usage Examples
 
@@ -111,8 +113,54 @@ print(f"Status: {'Success' if result['returncode'] == 0 else 'Failed'}")
 ### Prerequisites
 
 - Python 3.8 or higher
-- FFmpeg installed on your system
+- FFmpeg installed on your system (see [Installing FFmpeg](#installing-ffmpeg) below)
 - [uv](https://github.com/astral-sh/uv) package manager (recommended) or pip
+
+### Installing FFmpeg
+
+FFmpeg must be installed on the server where you run this API.
+
+#### Linux
+
+**Ubuntu/Debian:**
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
+
+**Fedora:**
+```bash
+sudo dnf install ffmpeg
+```
+
+**Arch Linux:**
+```bash
+sudo pacman -S ffmpeg
+```
+
+#### macOS
+
+Using Homebrew:
+```bash
+brew install ffmpeg
+```
+
+#### Windows
+
+1. **Using Chocolatey** (recommended):
+   ```bash
+   choco install ffmpeg
+   ```
+
+2. **Manual Installation:**
+   - Download from [ffmpeg.org](https://ffmpeg.org/download.html#build-windows)
+   - Extract the archive
+   - Add the `bin` folder to your system PATH
+
+**Verify installation:**
+```bash
+ffmpeg -version
+```
 
 ### Quick Start
 
