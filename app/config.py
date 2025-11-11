@@ -12,6 +12,7 @@ __version__ = "0.1.0"
 
 
 from pydantic_settings import BaseSettings
+from typing import Literal
 
 
 class Settings(BaseSettings):
@@ -22,6 +23,8 @@ class Settings(BaseSettings):
 
     allowed_commands: list[str] = ["ffmpeg", "ffprobe"]
     max_upload_size_mb: int = 100 * 1024 * 1024  # 100 MB
+
+    env: Literal["development", "production"] = "development"
 
 
 settings = Settings()

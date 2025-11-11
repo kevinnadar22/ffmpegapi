@@ -40,7 +40,9 @@ async def lifespan(app: FastAPI):
     task.cancel()
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan, docs_url=None if settings.env == "production" else "/docs"
+)
 
 ensure_directories_exist()  # need to ensure directories exist before mounting static files
 app.mount("/static", StaticFiles(directory=settings.output_dir), name="static")
