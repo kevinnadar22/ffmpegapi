@@ -26,5 +26,9 @@ class Settings(BaseSettings):
 
     env: Literal["development", "production"] = "development"
 
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
 
 settings = Settings()
