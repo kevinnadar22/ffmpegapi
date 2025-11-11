@@ -41,6 +41,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+ensure_directories_exist()  # need to ensure directories exist before mounting static files
 app.mount("/static", StaticFiles(directory=settings.output_dir), name="static")
 
 
